@@ -11,11 +11,11 @@ import (
 )
 
 type Handler struct {
-	storageService service.StorageService
+	storeProcessService service.StoreProcessService
 }
 
-func New(storageService service.StorageService) *Handler {
-	return &Handler{storageService}
+func New(storeProcessService service.StoreProcessService) *Handler {
+	return &Handler{storeProcessService}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
@@ -41,7 +41,7 @@ func (h *Handler) put(ctx *gin.Context) {
 		return
 	}
 
-	err := h.storageService.Put(ctx.Request.Context(), addRequest)
+	err := h.storeProcessService.Put(ctx.Request.Context(), addRequest)
 	if err != nil {
 		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -53,7 +53,7 @@ func (h *Handler) put(ctx *gin.Context) {
 func (h *Handler) get(ctx *gin.Context) {
 	key := ctx.Param("key")
 
-	value, err := h.storageService.Get(ctx.Request.Context(), key)
+	value, err := h.storeProcessService.Get(ctx.Request.Context(), key)
 
 	if err != nil {
 		if errors.Is(customErrors.NotFound, err) {
@@ -71,7 +71,7 @@ func (h *Handler) get(ctx *gin.Context) {
 func (h *Handler) delete(ctx *gin.Context) {
 	key := ctx.Param("key")
 
-	err := h.storageService.Delete(ctx, key)
+	err := h.storeProcessService.Delete(ctx, key)
 
 	if err != nil {
 		if errors.Is(customErrors.NotFound, err) {

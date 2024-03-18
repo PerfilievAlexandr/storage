@@ -48,7 +48,7 @@ func (f *fileTransactionLogger) Run() {
 		for event := range events {
 			f.lastSequence++
 
-			_, err := fmt.Printf("%d\t%d\t%s\t%s\n", event.Sequence, event.EventType, event.Key, event.Value)
+			_, err := fmt.Fprintf(f.file, "%d\t%d\t%s\t%s\n", f.lastSequence, event.EventType, event.Key, event.Value)
 
 			if err != nil {
 				errors <- err
@@ -57,7 +57,7 @@ func (f *fileTransactionLogger) Run() {
 	}()
 }
 
-func (f *fileTransactionLogger) ReadEvents() (chan<- domain.Event, chan<- error) {
+func (f *fileTransactionLogger) ReadEvents() (<-chan domain.Event, <-chan error) {
 	scanner := bufio.NewScanner(f.file)
 	outEvents := make(chan domain.Event)
 	outErrors := make(chan error, 1)

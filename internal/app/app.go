@@ -54,6 +54,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initConfig,
 		a.initProvider,
 		a.initHttpServer,
+		a.synchronizeStorage,
 	}
 
 	for _, f := range inits {
@@ -86,6 +87,12 @@ func (a *App) initHttpServer(ctx context.Context) error {
 		Addr:    a.diProvider.Config(ctx).HttpConfig.Address(),
 		Handler: a.diProvider.httpHandler.InitRoutes(),
 	}
+
+	return nil
+}
+
+func (a *App) synchronizeStorage(ctx context.Context) error {
+	a.diProvider.StoreProcessService(ctx).SynchronizeStorage(ctx)
 
 	return nil
 }

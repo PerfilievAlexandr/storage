@@ -12,7 +12,10 @@ type storageService struct {
 	storageRepository repository.StorageRepository
 }
 
-func New(_ context.Context, storageRepository repository.StorageRepository) service.StorageService {
+func New(
+	_ context.Context,
+	storageRepository repository.StorageRepository,
+) service.StorageService {
 	return &storageService{storageRepository}
 }
 
