@@ -16,8 +16,8 @@ func New(_ context.Context, storageRepository repository.StorageRepository) serv
 	return &storageService{storageRepository}
 }
 
-func (s *storageService) Add(ctx context.Context, req dtoHttpStorage.AddRequest) error {
-	err := s.storageRepository.Add(ctx, req)
+func (s *storageService) Put(ctx context.Context, req dtoHttpStorage.AddRequest) error {
+	err := s.storageRepository.Put(ctx, req)
 
 	if err != nil {
 		return err

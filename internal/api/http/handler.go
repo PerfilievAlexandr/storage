@@ -25,7 +25,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		lists := api.Group("/storage")
 		{
-			lists.POST("/", h.add)
+			lists.POST("/", h.put)
 			lists.GET("/:key", h.get)
 			lists.DELETE("/:key", h.delete)
 		}
@@ -34,14 +34,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	return router
 }
 
-func (h *Handler) add(ctx *gin.Context) {
+func (h *Handler) put(ctx *gin.Context) {
 	var addRequest dtoHttpStorage.AddRequest
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&addRequest); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err := h.storageService.Add(ctx.Request.Context(), addRequest)
+	err := h.storageService.Put(ctx.Request.Context(), addRequest)
 	if err != nil {
 		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return

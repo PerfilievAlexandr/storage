@@ -20,7 +20,7 @@ func New(_ context.Context) repository.StorageRepository {
 	}
 }
 
-func (r *repo) Add(_ context.Context, req dtoHttpStorage.AddRequest) error {
+func (r *repo) Put(_ context.Context, req dtoHttpStorage.AddRequest) error {
 	r.mx.Lock()
 	r.storage[req.Key] = req.Value
 	r.mx.Unlock()

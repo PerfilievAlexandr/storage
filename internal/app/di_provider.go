@@ -8,14 +8,16 @@ import (
 	storageRepository "github.com/PerfilievAlexandr/storage/internal/repository/storage"
 	"github.com/PerfilievAlexandr/storage/internal/service"
 	storageService "github.com/PerfilievAlexandr/storage/internal/service/storage"
+	fileTransactionLoggerService "github.com/PerfilievAlexandr/storage/internal/service/transaction_logger"
 	"log"
 )
 
 type diProvider struct {
-	config            *config.Config
-	httpHandler       *http.Handler
-	storageService    service.StorageService
-	storageRepository repository.StorageRepository
+	config                   *config.Config
+	httpHandler              *http.Handler
+	storageService           service.StorageService
+	transactionLoggerService service.TransactionLoggerService
+	storageRepository        repository.StorageRepository
 }
 
 func newDiProvider() *diProvider {
@@ -57,4 +59,17 @@ func (p *diProvider) StorageService(ctx context.Context) service.StorageService 
 	}
 
 	return p.storageService
+}
+
+func (p *diProvider) FileTransactionLoggerService(ctx context.Context) service.TransactionLoggerService {
+	if p.transactionLoggerService == nil {
+		transactionLoggerService, err := fileTransactionLoggerService.New(ctx, "transaction.log")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		p.transactionLoggerService = transactionLoggerService
+	}
+
+	return p.transactionLoggerService
 }

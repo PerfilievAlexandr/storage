@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"github.com/PerfilievAlexandr/platform_common/pkg/closer"
 	"github.com/PerfilievAlexandr/storage/internal/config"
 	"log"
@@ -82,15 +83,15 @@ func (a *App) initProvider(_ context.Context) error {
 func (a *App) initHttpServer(ctx context.Context) error {
 	a.diProvider.HttpHandler(ctx)
 	a.httpServer = &http.Server{
-		Addr:    a.diProvider.config.HttpConfig.Address(),
+		Addr:    a.diProvider.Config(ctx).HttpConfig.Address(),
 		Handler: a.diProvider.httpHandler.InitRoutes(),
 	}
 
 	return nil
 }
 
-func (a *App) runHttpServer(_ context.Context) error {
-	log.Print("HTTP server is running on:")
+func (a *App) runHttpServer(ctx context.Context) error {
+	log.Print(fmt.Sprintf("HTTP server is running on: %s", a.diProvider.Config(ctx).HttpConfig.Address()))
 
 	err := a.httpServer.ListenAndServe()
 	if err != nil {
